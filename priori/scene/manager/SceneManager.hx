@@ -1,5 +1,6 @@
 package priori.scene.manager;
 
+import priori.view.container.PriGroup;
 import priori.scene.view.preload.PriPreloadSceneDefault;
 import priori.assets.AssetManagerEvent;
 import priori.scene.view.preload.PriPreloadScene;
@@ -18,12 +19,16 @@ class SceneManager {
 
     private var isPreloading:Bool;
 
+    private var holder:PriGroup;
+
     public function new() {
         if (_g == null) {
             _g = this;
         } else {
             throw "Use static .g() method";
         }
+
+        this.holder = PriApp.g();
 
         PriApp.g().addEventListener(PriEvent.RESIZE, this.onAppResize);
 
@@ -32,6 +37,17 @@ class SceneManager {
 
         this.sceneContainer = new PriContainer();
         this.sceneContainer.clipping = true;
+    }
+
+    public function setupHolder(holder:PriGroup):Void {
+        if (holder == null) return;
+
+        if (this.holder != null) {
+            this.holder.removeEventListener(PriEvent.RESIZE, this.onAppResize);
+        }
+
+        this.holder = holder;
+        this.holder.addEventListener(PriEvent.RESIZE, this.onAppResize);
     }
 
     public function getContainer():PriContainer {
@@ -91,8 +107,8 @@ class SceneManager {
 
             this.sceneContainer.addChild(this.currentScene);
 
-            if (this.sceneContainer.parent != PriApp.g()) {
-                PriApp.g().addChild(this.sceneContainer);
+            if (this.sceneContainer.parent != this.holder) {
+                this.holder.addChild(this.sceneContainer);
             }
 
             if (keepInHistory == true) {
@@ -107,8 +123,8 @@ class SceneManager {
     }
 
     private function onAppResize(e:PriEvent):Void {
-        var w:Float = PriApp.g().width;
-        var h:Float = PriApp.g().height;
+        var w:Float = this.holder.width;
+        var h:Float = this.holder.height;
 
         this.sceneContainer.width = w;
         this.sceneContainer.height = h;

@@ -4,8 +4,8 @@
   "license": "MIT",
   "tags": [ "html5", "web", "js", "javascript", "priori", "spa", "cross", "webapp"],
   "description": "SceneManager for Priori",
-  "version": "0.0.1",
-  "releasenote": "Initial release. Fully functional but many things are changing yet.",
+  "version": "0.1.0",
+  "releasenote": "Optional container holder for priori scene manager.",
   "contributors": [ "triture" ],
   "dependencies": {
     "priori" : ""
